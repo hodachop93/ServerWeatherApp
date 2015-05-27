@@ -30,19 +30,34 @@ class Process extends Thread {
 
 	@Override
 	public void run() {
+		byte[] sendData = new byte[100];
+		String output;
 		String input = new String(packet.getData()).substring(0,
 				packet.getLength());
-		String output = RemoteFetch.getJSON(input);
-		System.out.println(output);
+		System.out.println(input);
+		String[] elements = input.split("-");
+		System.out.println(elements[0]);
+		if (elements[0].equals("CityName")) {
+			output = RemoteFetch.getJSON(elements[1]);
+			System.out.println("vao day roi");
+		}
+		else {
+			System.out.println("ko vao day");
+			System.out.println(elements[1]);
+			System.out.println(elements[2]);
+			output = RemoteFetch.getJSONLocation(elements[1], elements[2]);
+		}
 		
-		//Response Data
-		
+		//Gui tra du lieu
 		try {
-			//InetAddress ipRespone = InetAddress.getByName("10.0.3.2");
-			DatagramPacket sendPacket = new DatagramPacket(output.getBytes(),
-					output.length(), packet.getAddress(), packet.getPort());
+			sendData = output.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData,
+					sendData.length, packet.getAddress(), packet.getPort());
 			socket.send(sendPacket);
-			System.out.println(output.length());
+			byte[] array = output.getBytes();
+			String test = new String(array);
+			System.out.println(test);
+			System.out.println(test.length());
 		} catch (IOException e) {
 			e.printStackTrace();
 			

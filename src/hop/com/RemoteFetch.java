@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 import org.json.JSONObject;
 
@@ -41,10 +42,33 @@ public class RemoteFetch {
 			while ((temp = reader.readLine()) != null)
 				json.append(temp);
 			reader.close();
-			return json.toString();
+			String returnStr = json.toString();
+			Charset.forName("UTF-8").encode(returnStr);
+			return returnStr;
 			/* Gia tri tra ve khi ko get duoc du lieu tu server. Loi 404 */
 			
 
+		} catch (MalformedURLException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String getJSONLocation(String latitude, String longtitude) {
+		try {
+
+            URL url = new URL("http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longtitude);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
+            StringBuilder json = new StringBuilder();
+			String temp = "";
+			while ((temp = reader.readLine()) != null)
+				json.append(temp);
+			reader.close();
+			String returnStr = json.toString();
+			Charset.forName("UTF-8").encode(returnStr);
+			return returnStr;
 		} catch (MalformedURLException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
