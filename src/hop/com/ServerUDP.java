@@ -10,6 +10,7 @@ public class ServerUDP {
 		byte[] receiveData = new byte[1024];
 		DatagramSocket socket = new DatagramSocket(port);
 		while (true) {
+			//System.out.println("dang cho");
 			DatagramPacket packet = new DatagramPacket(receiveData,
 					receiveData.length);
 			socket.receive(packet);
@@ -32,17 +33,13 @@ class Process extends Thread {
 	public void run() {
 		byte[] sendData = new byte[100];
 		String output;
-		String input = new String(packet.getData()).substring(0,
-				packet.getLength());
+		String input = new String(packet.getData(), packet.getOffset(), packet.getLength());
 		System.out.println(input);
 		String[] elements = input.split("-");
-		System.out.println(elements[0]);
 		if (elements[0].equals("CityName")) {
 			output = RemoteFetch.getJSON(elements[1]);
-			System.out.println("vao day roi");
 		}
 		else {
-			System.out.println("ko vao day");
 			System.out.println(elements[1]);
 			System.out.println(elements[2]);
 			output = RemoteFetch.getJSONLocation(elements[1], elements[2]);
